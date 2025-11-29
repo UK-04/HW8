@@ -1,6 +1,6 @@
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   Usman Khan / COMP 272-002
  *
  *   Note, additional comments provided throughout this source code
  *   is for educational purposes
