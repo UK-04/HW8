@@ -103,8 +103,26 @@ public class Graph {
    */
   
   public int findRoot() {
-
     // ADD YOUR CODE HERE - DO NOT FORGET TO ADD YOUR NAME/SECTION AT TOP OF FILE
-    return -1;
+    int rootIndex = -1;
+    int rootCount = 0;
+    for (int i = 0; i < numVertices; i++) {
+      boolean hasIncomingEdges = false;
+      for (int j = 0; j < numVertices; j++) {
+        if (adjListArr[j].contains(i)) {
+          hasIncomingEdges = true;
+          break;
+        }
+      }
+      if (!hasIncomingEdges) {
+        rootIndex = i;
+        rootCount++;
+      }
+    }
+    if (rootCount == 1) {
+      return vertexValues.get(rootIndex);
+    } else {
+      return -1;
+    }
   } 
 }

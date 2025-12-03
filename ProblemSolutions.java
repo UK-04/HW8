@@ -78,11 +78,21 @@ class ProblemSolutions {
         int numNodes = numExams;  // # of nodes in graph
 
         // Build directed graph's adjacency list
-        ArrayList<Integer>[] adj = getAdjList(numExams, 
-                                        prerequisites); 
+        ArrayList<Integer>[] adj = getAdjList(numExams, prerequisites); 
 
-        // ADD YOUR CODE HERE - ADD YOUR NAME / SECTION AT TOP OF FILE
-        return false;
+        // Use DFS with node states to detect cycles in the directed graph.
+        // state: 0 = unvisited, 1 = visiting, 2 = visited
+        int[] state = new int[numNodes];
+
+        for (int node = 0; node < numNodes; node++) {
+            if (state[node] == 0) {
+                if (hasCycle(node, adj, state)) {
+                    return false; // cycle detected -> cannot finish
+                }
+            }
+        }
+
+        return true; // no cycles found -> can finish all exams
 
     }
 
@@ -111,6 +121,23 @@ class ProblemSolutions {
             adj[edge[0]].add(edge[1]);              // Add connected node edge [1] for node [0]
         }
         return adj;
+    }
+
+    // Helper DFS method to detect cycle in directed graph.
+    private boolean hasCycle(int node, ArrayList<Integer>[] adj, int[] state) {
+        state[node] = 1; // mark as visiting
+        for (int nei : adj[node]) {
+            if (state[nei] == 1) {
+                return true; // found a back-edge -> cycle
+            }
+            if (state[nei] == 0) {
+                if (hasCycle(nei, adj, state)) {
+                    return true;
+                }
+            }
+        }
+        state[node] = 2; // mark as visited
+        return false;
     }
 
 
@@ -190,9 +217,36 @@ class ProblemSolutions {
             }
         }
 
-        // YOUR CODE GOES HERE - you can add helper methods, you do not need
-        // to put all code in this method.
-        return -1;
+        // Count connected components using DFS. Nodes with no connections
+        // are their own groups.
+        if (numNodes == 0) return 0;
+
+        boolean[] visited = new boolean[numNodes];
+        int groups = 0;
+
+        for (int node = 0; node < numNodes; node++) {
+            if (!visited[node]) {
+                groups++;
+                // iterative DFS
+                Stack<Integer> stack = new Stack<>();
+                stack.push(node);
+                visited[node] = true;
+
+                while (!stack.isEmpty()) {
+                    int cur = stack.pop();
+                    List<Integer> neighbors = graph.get(cur);
+                    if (neighbors == null) continue;
+                    for (int nei : neighbors) {
+                        if (!visited[nei]) {
+                            visited[nei] = true;
+                            stack.push(nei);
+                        }
+                    }
+                }
+            }
+        }
+
+        return groups;
     }
 
 }
